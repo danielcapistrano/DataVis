@@ -120,13 +120,14 @@ plot <-
   xlim(1985, this_year) +
   theme(legend.position = "none",
         plot.background = element_rect(fill = "#F5F5DD", 
-                          colour = "white", linewidth = 5)) 
+                          colour = "white", linewidth = 5),
+        plot.margin = margin(20, 2, 1, 2)) 
 
 plot_time <- 
   ggarrange(
-    plot + coord_polar(start = 0.5),
-    plot + coord_polar(start = 2),
-    plot + coord_polar(start = 4),
+    plot + coord_polar(start = 0.3),
+    plot + coord_polar(start = 0.6),
+    plot + coord_polar(start = 0.9),
     nrow = 1
   )
 
