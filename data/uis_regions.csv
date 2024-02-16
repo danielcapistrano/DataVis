@@ -1,0 +1,236 @@
+﻿Country,Region,API
+Angola,Sub-Saharan Africa,SDG_SSA
+Benin,Sub-Saharan Africa,SDG_SSA
+Botswana,Sub-Saharan Africa,SDG_SSA
+Burkina Faso,Sub-Saharan Africa,SDG_SSA
+Burundi,Sub-Saharan Africa,SDG_SSA
+Cabo Verde,Sub-Saharan Africa,SDG_SSA
+Cameroon,Sub-Saharan Africa,SDG_SSA
+Central African Republic,Sub-Saharan Africa,SDG_SSA
+Chad,Sub-Saharan Africa,SDG_SSA
+Comoros,Sub-Saharan Africa,SDG_SSA
+Congo,Sub-Saharan Africa,SDG_SSA
+Côte d'Ivoire,Sub-Saharan Africa,SDG_SSA
+Democratic Republic of the Congo,Sub-Saharan Africa,SDG_SSA
+Djibouti,Sub-Saharan Africa,SDG_SSA
+Equatorial Guinea,Sub-Saharan Africa,SDG_SSA
+Eritrea,Sub-Saharan Africa,SDG_SSA
+Ethiopia,Sub-Saharan Africa,SDG_SSA
+Gabon,Sub-Saharan Africa,SDG_SSA
+Gambia,Sub-Saharan Africa,SDG_SSA
+Ghana,Sub-Saharan Africa,SDG_SSA
+Guinea,Sub-Saharan Africa,SDG_SSA
+Guinea-Bissau,Sub-Saharan Africa,SDG_SSA
+Kenya,Sub-Saharan Africa,SDG_SSA
+Lesotho,Sub-Saharan Africa,SDG_SSA
+Liberia,Sub-Saharan Africa,SDG_SSA
+Madagascar,Sub-Saharan Africa,SDG_SSA
+Malawi,Sub-Saharan Africa,SDG_SSA
+Mali,Sub-Saharan Africa,SDG_SSA
+Mauritania,Sub-Saharan Africa,SDG_SSA
+Mauritius,Sub-Saharan Africa,SDG_SSA
+Mozambique,Sub-Saharan Africa,SDG_SSA
+Namibia,Sub-Saharan Africa,SDG_SSA
+Niger,Sub-Saharan Africa,SDG_SSA
+Nigeria,Sub-Saharan Africa,SDG_SSA
+Réunion,Sub-Saharan Africa,SDG_SSA
+Rwanda,Sub-Saharan Africa,SDG_SSA
+Sao Tome and Principe,Sub-Saharan Africa,SDG_SSA
+Senegal,Sub-Saharan Africa,SDG_SSA
+Seychelles,Sub-Saharan Africa,SDG_SSA
+Sierra Leone,Sub-Saharan Africa,SDG_SSA
+Somalia,Sub-Saharan Africa,SDG_SSA
+South Africa,Sub-Saharan Africa,SDG_SSA
+South Sudan,Sub-Saharan Africa,SDG_SSA
+Swaziland,Sub-Saharan Africa,SDG_SSA
+Togo,Sub-Saharan Africa,SDG_SSA
+Uganda,Sub-Saharan Africa,SDG_SSA
+United Republic of Tanzania,Sub-Saharan Africa,SDG_SSA
+Zambia,Sub-Saharan Africa,SDG_SSA
+Zimbabwe,Sub-Saharan Africa,SDG_SSA
+Algeria,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Egypt,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Libya,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Morocco,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Sudan,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Tunisia,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Western Sahara,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Azerbaijan,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Armenia,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Bahrain,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Cyprus,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Georgia,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Iraq,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Israel,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Jordan,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Kuwait,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Lebanon,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Palestine,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Oman,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Qatar,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Saudi Arabia,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Syrian Arab Republic,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Turkey,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+United Arab Emirates,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Yemen,Northern Africa and Western Asia,SDG_NAFR_WEST_AS
+Kazakhstan,Central and Southern Asia,SDG_CEN_SAS
+Kyrgyzstan,Central and Southern Asia,SDG_CEN_SAS
+Tajikistan,Central and Southern Asia,SDG_CEN_SAS
+Turkmenistan,Central and Southern Asia,SDG_CEN_SAS
+Uzbekistan,Central and Southern Asia,SDG_CEN_SAS
+Afghanistan,Central and Southern Asia,SDG_CEN_SAS
+Bangladesh,Central and Southern Asia,SDG_CEN_SAS
+Bhutan,Central and Southern Asia,SDG_CEN_SAS
+India,Central and Southern Asia,SDG_CEN_SAS
+Iran (Islamic Republic of),Central and Southern Asia,SDG_CEN_SAS
+Maldives,Central and Southern Asia,SDG_CEN_SAS
+Nepal,Central and Southern Asia,SDG_CEN_SAS
+Pakistan,Central and Southern Asia,SDG_CEN_SAS
+Sri Lanka,Central and Southern Asia,SDG_CEN_SAS
+China,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+"China, Hong Kong Special Administrative Region",Eastern and South-Eastern Asia,SDG_EAS_SEAS
+"China, Macao Special Administrative Region",Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Democratic People's Republic of Korea,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Japan,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Mongolia,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Republic of Korea,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Brunei Darussalam,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Cambodia,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Indonesia,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Lao People's Democratic Republic,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Malaysia,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Myanmar,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Philippines,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Singapore,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Thailand,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Timor-Leste,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Viet Nam,Eastern and South-Eastern Asia,SDG_EAS_SEAS
+Anguilla,Latin America and the Caribbean,SDG_LAC
+Antigua and Barbuda,Latin America and the Caribbean,SDG_LAC
+Aruba,Latin America and the Caribbean,SDG_LAC
+Bahamas,Latin America and the Caribbean,SDG_LAC
+Barbados,Latin America and the Caribbean,SDG_LAC
+"Bonaire, Sint Eustatius and Saba",Latin America and the Caribbean,SDG_LAC
+British Virgin Islands,Latin America and the Caribbean,SDG_LAC
+Cayman Islands,Latin America and the Caribbean,SDG_LAC
+Cuba,Latin America and the Caribbean,SDG_LAC
+Curaçao,Latin America and the Caribbean,SDG_LAC
+Dominica,Latin America and the Caribbean,SDG_LAC
+Dominican Republic,Latin America and the Caribbean,SDG_LAC
+Grenada,Latin America and the Caribbean,SDG_LAC
+Guadeloupe,Latin America and the Caribbean,SDG_LAC
+Haiti,Latin America and the Caribbean,SDG_LAC
+Jamaica,Latin America and the Caribbean,SDG_LAC
+Martinique,Latin America and the Caribbean,SDG_LAC
+Montserrat,Latin America and the Caribbean,SDG_LAC
+Puerto Rico,Latin America and the Caribbean,SDG_LAC
+Saint Kitts and Nevis,Latin America and the Caribbean,SDG_LAC
+Saint Lucia,Latin America and the Caribbean,SDG_LAC
+Saint Vincent and the Grenadines,Latin America and the Caribbean,SDG_LAC
+Sint Maarten (Dutch part),Latin America and the Caribbean,SDG_LAC
+Suriname,Latin America and the Caribbean,SDG_LAC
+Trinidad and Tobago,Latin America and the Caribbean,SDG_LAC
+Turks and Caicos Islands,Latin America and the Caribbean,SDG_LAC
+United States Virgin Islands ,Latin America and the Caribbean,SDG_LAC
+Honduras,Latin America and the Caribbean,SDG_LAC
+Costa Rica,Latin America and the Caribbean,SDG_LAC
+El Salvador,Latin America and the Caribbean,SDG_LAC
+Guatemala,Latin America and the Caribbean,SDG_LAC
+Mexico,Latin America and the Caribbean,SDG_LAC
+Nicaragua,Latin America and the Caribbean,SDG_LAC
+Panama,Latin America and the Caribbean,SDG_LAC
+Argentina,Latin America and the Caribbean,SDG_LAC
+Belize,Latin America and the Caribbean,SDG_LAC
+Bolivia (Plurinational State of),Latin America and the Caribbean,SDG_LAC
+Brazil,Latin America and the Caribbean,SDG_LAC
+Chile,Latin America and the Caribbean,SDG_LAC
+Colombia,Latin America and the Caribbean,SDG_LAC
+Ecuador,Latin America and the Caribbean,SDG_LAC
+French Guiana,Latin America and the Caribbean,SDG_LAC
+Falkland Islands (Malvinas),Latin America and the Caribbean,SDG_LAC
+South Georgia & the South Sandwich Islands,Latin America and the Caribbean,SDG_LAC
+Guyana,Latin America and the Caribbean,SDG_LAC
+Paraguay,Latin America and the Caribbean,SDG_LAC
+Peru,Latin America and the Caribbean,SDG_LAC
+Uruguay,Latin America and the Caribbean,SDG_LAC
+Venezuela (Bolivarian Republic of),Latin America and the Caribbean,SDG_LAC
+Australia,Oceania,SDG_OC
+Christmas Island,Oceania,SDG_OC
+Cocos (Keeling) Islands,Oceania,SDG_OC
+Heard Island & McDonald Islands,Oceania,SDG_OC
+Norfolk Island,Oceania,SDG_OC
+New Zealand,Oceania,SDG_OC
+Fiji,Oceania,SDG_OC
+New Caledonia,Oceania,SDG_OC
+Papua New Guinea,Oceania,SDG_OC
+Solomon Islands,Oceania,SDG_OC
+Vanuatu,Oceania,SDG_OC
+Kiribati,Oceania,SDG_OC
+Marshall Islands,Oceania,SDG_OC
+Micronesia (Federated States of),Oceania,SDG_OC
+Nauru,Oceania,SDG_OC
+Northern Mariana Islands,Oceania,SDG_OC
+Palau,Oceania,SDG_OC
+Guam,Oceania,SDG_OC
+French Polynesia,Oceania,SDG_OC
+Wallis and Futuna Island,Oceania,SDG_OC
+Pitcairn,Oceania,SDG_OC
+Cook Islands,Oceania,SDG_OC
+Niue,Oceania,SDG_OC
+Tokelau,Oceania,SDG_OC
+Tonga,Oceania,SDG_OC
+Tuvalu,Oceania,SDG_OC
+American Samoa ,Oceania,SDG_OC
+Samoa,Oceania,SDG_OC
+Bermuda,Europe and Northern America,SDG_EUR_NAM
+Canada,Europe and Northern America,SDG_EUR_NAM
+Greenland,Europe and Northern America,SDG_EUR_NAM
+United States of America,Europe and Northern America,SDG_EUR_NAM
+Bulgaria,Europe and Northern America,SDG_EUR_NAM
+Belarus,Europe and Northern America,SDG_EUR_NAM
+Czechia,Europe and Northern America,SDG_EUR_NAM
+Hungary,Europe and Northern America,SDG_EUR_NAM
+Republic of Moldova,Europe and Northern America,SDG_EUR_NAM
+Poland,Europe and Northern America,SDG_EUR_NAM
+Romania,Europe and Northern America,SDG_EUR_NAM
+Russian Federation,Europe and Northern America,SDG_EUR_NAM
+Slovakia,Europe and Northern America,SDG_EUR_NAM
+Ukraine,Europe and Northern America,SDG_EUR_NAM
+Åland Islands,Europe and Northern America,SDG_EUR_NAM
+Channel Islands,Europe and Northern America,SDG_EUR_NAM
+Denmark,Europe and Northern America,SDG_EUR_NAM
+Estonia,Europe and Northern America,SDG_EUR_NAM
+Faroe Islands,Europe and Northern America,SDG_EUR_NAM
+Finland,Europe and Northern America,SDG_EUR_NAM
+Gibraltar,Europe and Northern America,SDG_EUR_NAM
+Isle of Man,Europe and Northern America,SDG_EUR_NAM
+United Kingdom of Great Britain and Northern Ireland,Europe and Northern America,SDG_EUR_NAM
+Iceland,Europe and Northern America,SDG_EUR_NAM
+Ireland,Europe and Northern America,SDG_EUR_NAM
+Latvia,Europe and Northern America,SDG_EUR_NAM
+Lithuania,Europe and Northern America,SDG_EUR_NAM
+Norway,Europe and Northern America,SDG_EUR_NAM
+Sweden,Europe and Northern America,SDG_EUR_NAM
+Albania,Europe and Northern America,SDG_EUR_NAM
+Andorra,Europe and Northern America,SDG_EUR_NAM
+Bosnia and Herzegovina,Europe and Northern America,SDG_EUR_NAM
+Croatia,Europe and Northern America,SDG_EUR_NAM
+Greece,Europe and Northern America,SDG_EUR_NAM
+Italy,Europe and Northern America,SDG_EUR_NAM
+Malta,Europe and Northern America,SDG_EUR_NAM
+Montenegro,Europe and Northern America,SDG_EUR_NAM
+Portugal,Europe and Northern America,SDG_EUR_NAM
+San Marino,Europe and Northern America,SDG_EUR_NAM
+Serbia,Europe and Northern America,SDG_EUR_NAM
+Slovenia,Europe and Northern America,SDG_EUR_NAM
+Spain,Europe and Northern America,SDG_EUR_NAM
+The former Yugoslav Republic of Macedonia,Europe and Northern America,SDG_EUR_NAM
+Austria,Europe and Northern America,SDG_EUR_NAM
+Belgium,Europe and Northern America,SDG_EUR_NAM
+Switzerland,Europe and Northern America,SDG_EUR_NAM
+Germany,Europe and Northern America,SDG_EUR_NAM
+France,Europe and Northern America,SDG_EUR_NAM
+Liechtenstein,Europe and Northern America,SDG_EUR_NAM
+Luxembourg,Europe and Northern America,SDG_EUR_NAM
+Monaco,Europe and Northern America,SDG_EUR_NAM
+Netherlands,Europe and Northern America,SDG_EUR_NAM

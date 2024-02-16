@@ -1,0 +1,285 @@
+---
+title: "DataVis"
+author: "Daniel Capistrano"
+format:
+  html:
+    code-fold: true
+    toc: true
+execute: 
+  warning: false
+from: markdown+emoji
+---
+
+Here is a collection of some artifacts produced during my time thinking about and tinkering with data visualisations. The inspiration comes from my admiration for artists linked to [Latin American geometric abstraction](https://www.theguardian.com/artanddesign/2014/jun/27/south-american-painting-radical-geometry-royal-academy-exhibition), especially  Joaquín Torres García, Lygia Clark and Loló Soldevilla.  
+
+## Co-laborators
+
+Almost all my publications (reports, chapters, journal articles) result from collaborations with dear colleagues. These two plots provide a visual representation of the duration and diversity of this co-laboured trajectory. 
+
+### Composição
+
+1) First, we import the dataset that contains basically the surnames of my colleagues, their country of origin and preferred pronoun, as well as the year we started working together. 
+
+2) Using the package [`imgpalr`](https://leonawicz.github.io/imgpalr/), we create an object with the HEX code for colours that are present in random points of Lygia Clark's painting "[Composição (1953)](https://portal.lygiaclark.org.br/en/artwork/55666/composition)".
+
+3) Finally, we generate one rectangle for each colleague with the side proportional to the time since we met. Colours represent the combination of pronoun and country of origin. 
+
+```{r}
+library(tidyverse)
+library(ggpubr)
+library(imgpalr)
+
+# 1) Importing the dataset  and transforming variables ########################
+
+# Reading the dataset
+df <- read_csv("./data/colleagues.csv")
+
+# Getting current year
+this_year <- as.numeric(format(Sys.Date(), "%Y"))
+
+# Size of the block is equal to the number of years since year met
+df$size <- (this_year - df$year_met)
+
+# Creating group combining country and pronoum
+df$group <- paste0(df$country, df$pronoum)
+
+# Number of co-laborators
+n_colab <- nrow(df)
+
+
+# 2) Creating colour palette #####################################
+
+# Seed for palette generation and coordinates
+seed = 7
+set.seed(seed)
+
+# URL of the image of Lygia Clark's Composicao (1953)
+
+img_url <- "https://portal.lygiaclark.org.br/public/upload/screen/2021-09-07/6b1143a6023bc122578da3423f4149cc[2100x2995].jpg"
+
+# Generating one color for each row in the dataset
+compo <- image_pal(img_url, n = nrow(df), type = "qual", seed = seed)
+
+
+# 3) Generating the plot #####################################
+
+# Adding empty columns for coordinates
+df <- cbind(df, x1 = NA, x2 = NA, y1 = NA, y2 = NA)
+
+# Loop to generate random coordinates that overlap slightly
+for (i in sample(1:n_colab)){
+  # Defining the starting point randomly
+  df$x1[i] <- sample(1:n_colab)
+  df$y1[i] <- sample(1:n_colab)
+  
+  # If pronoum == s then go right and up otherwise the opposite
+  direction <- if_else(df$pronoum[i] == "s", 1, -1)
+  height <- sample(c(0.1, 0.7, 1), 1)
+
+  df$x2[i] <- df$x1[i] + direction * df$size[i]
+  df$y2[i] <- df$y1[i] + direction * df$size[i] * height
+}
+
+plot_compo <- 
+  ggplot(df,aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2)) +
+    geom_rect(aes(fill = group, alpha = 1 - size/max(size))) +
+    scale_fill_manual(values = compo) +
+    theme_void() +
+    theme(legend.position = "none")
+
+ggsave(plot_compo, filename = "./_img/composicao.png")
+
+plot_compo
+
+```
+
+
+::: {.aside}
+
+![Composicao (1953) - Lygia Clark (Source: [Associação Cultural Lygia Clark](https://portal.lygiaclark.org.br/))](`r img_url`){width=400}
+
+:::
+
+
+### Timeline
+
+The second plot follows the same idea of representing duration and diversity but takes a simpler  approach of plotting the timeline as coloured line segments and then "bending" the plot with the function `coord_plot()`. The composition below displays the same plot with different starting points. 
+
+```{r}
+
+# Y random position for segments
+df$pos <- sample(1:n_colab, n_colab)
+
+# Generating the ggplot
+plot <- 
+  ggplot(df, aes(x = year_met, xend = this_year,
+                  y = pos, yend = pos)) +
+  geom_segment(aes(color = group), linewidth = 1.2) +
+  scale_color_manual(values = compo) +
+  theme_void() +
+  xlim(1985, this_year) +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = "#F5F5DD", 
+                          colour = "white", linewidth = 5)) 
+
+plot_time <- 
+  ggarrange(
+    plot + coord_polar(start = 0.5),
+    plot + coord_polar(start = 2),
+    plot + coord_polar(start = 4),
+    nrow = 1
+  )
+
+ggsave(plot_time, filename = "./_img/timeline.png")
+
+plot_time
+
+```
+
+
+## UIS map
+
+In 2019, I worked in the elaboration of the SDG4 Data Digest published by the UNESCO Institute for Statistics  (UIS). Considering the importance of having SDG4 data available for all countries, [Sylvia Montoya](https://uis.unesco.org/en/uis-director) and I decided to represent each country equally to display data availability in the publication.  
+
+This visualisation is based on a modified version of the “World Tile
+Grid Map” developed by [Jonathan Schwabish](https://policyviz.com/2017/10/12/the-world-tile-grid-map/) with contributions
+from [Maarten Lambrechts](http://www.maartenlambrechts.com/2017/10/22/tutorial-a-worldtilegrid-with-ggplot2.html).
+
+The colours below represent each UIS region, and the squares were filled with colour only if the country had data available. For indicators with low coverage, most of the map was greyed out, like the map for the gender parity index of the indicator 4.1.1b, shown on the sidebar.  
+
+```{r}
+
+#Required
+library(tidyverse)
+library(countrycode)
+
+#Loading template map####
+
+#World Tile Grid (WTG)
+#Loading plot coord (source: "World Tile Grid Map" elaborated by Maarten Lambrechts)
+#countries included manually: Palestine, Cook Islands, Andorra (UNESCO member states)
+#countries removed manually: Antarctica, Kosovo, Greenland
+
+tb_wtg <- read_csv("./data/uis_worldtilegrid.csv")
+tb_wtg$alpha.2 <- as.character(tb_wtg$alpha.2)
+tb_wtg$alpha.3 <- as.character(tb_wtg$alpha.3)
+
+# Including UIS SDG regions
+#Source	https://unstats.un.org/sdgs/indicators/regional-groups/  Access	14/06/2019
+
+regions <- read_csv("./data/uis_regions.csv")
+regions$alpha.2 <- countrycode(regions$Country, "country.name", "iso2c", nomatch = NULL)
+regions$alpha.3 <- countrycode(regions$Country, "country.name", "iso3c", nomatch = NULL)
+
+#joining SDG regions and countries' coords
+WTG <- tb_wtg %>% left_join(regions, by = "alpha.3")
+
+#map with all countries
+uis_map <- 
+  WTG %>% 
+    mutate(Region = case_when(Region == "Europe and Northern America" ~ "Europe and North America", 
+                              TRUE ~ Region)) %>% 
+    ggplot(aes(xmin = x, ymin = y, xmax = x + 1, ymax = y + 1, fill = as.factor(Region))) +
+    geom_tile(aes(x= x, y = y), colour = "grey80") + 
+    theme_minimal() +
+    theme(panel.grid = element_blank(), axis.text = element_blank(), 
+          axis.title = element_blank(), legend.position = "none") +
+    geom_text(aes(x = x, y = y, label = alpha.2.y), color = "grey20", size = 3) +
+    scale_y_reverse() +
+    scale_fill_manual(values = c("#ff0000", "darkorange", "#ffef00", "#21a328", 
+                                "#0072b8", "#7f6999", "#ee82ee", "grey80"), drop = FALSE,
+                    name = "SDG Region") +
+    coord_equal() 
+
+ggsave(uis_map, filename = "./_img/uis_map.png", dpi = 320, width = 6, height = 5, bg = "transparent")
+
+uis_map
+
+```
+
+
+:::{.aside}
+![Figure 16 of the SDG4 Data Digest 2019. Source: [UIS](https://uis.unesco.org/sites/default/files/documents/sdg4-data-digest-2019-en_0.pdf)](./_img/uis_publication.png)
+:::
+
+## Palm trees
+
+In 2022, [Seaneen Sloan](https://people.ucd.ie/seaneen.sloan) and I worked on the report for the [Safe Learning Study](https://safelearning.ie). The study assessed a school-based programme in Sierra Leone. 
+
+The plot below represents the expected added value in a literacy test comparing students who participated in three different arms of the programme and the control group. The visualisation is inspired by the beautiful dandelion plots by [Martin Devaux](https://martindevaux.com/2021/01/randomly-position-points-in-circle-r/).
+
+
+```{r}
+library(tidyverse)
+
+df_leafs <- read_csv("./data/sls_results.csv")
+
+trunk_height <- 13 #Intercept
+
+trunk_pos1 <- 20
+
+df_tree <- 
+df_leafs %>% 
+  mutate(Group = case_when(
+    Group == "Control" ~ trunk_pos1,
+    Group == "Group 1" ~ 2*trunk_pos1,
+    Group == "Group 2" ~ 3*trunk_pos1,
+    Group == "Group 3" ~ 4*trunk_pos1)) %>% 
+  mutate(leaf_leng = if_else(Group == trunk_pos1, 1, Estimate + 1),
+         leaf_x = case_when(
+           outcome == "Letter Names" ~ Group - leaf_leng,
+           outcome == "Letter Sounds" ~ Group - leaf_leng,
+           outcome == "Invented words" ~ Group + leaf_leng,
+           outcome == "Familiar words" ~ Group + leaf_leng,
+           outcome == "Oral reading" ~ Group + leaf_leng),
+         leaf_y = case_when(
+           outcome == "Letter Names" ~ trunk_height - leaf_leng,
+           outcome == "Letter Sounds" ~ trunk_height,
+           outcome == "Invented words" ~ trunk_height + leaf_leng,
+           outcome == "Familiar words" ~ trunk_height,
+           outcome == "Oral reading" ~ trunk_height - leaf_leng),
+         leaf_pos = case_when(
+           outcome == "Letter Names" ~ "left",
+           outcome == "Letter Sounds" ~ "left",
+           outcome == "Invented words" ~ "right",
+           outcome == "Familiar words" ~ "right",
+           outcome == "Oral reading" ~ "right"))
+
+
+mytheme <- 
+  theme(
+    axis.text.x = element_text(size = 18),
+    legend.text = element_text(size = 11),
+    plot.background = element_rect(fill = '#f0ebe7', colour = NA),
+    plot.margin = margin(15, 80, 15, 80),
+    panel.background = element_rect(fill = '#f0ebe7', colour = NA))
+
+gg_palmtree <-
+  df_tree %>% 
+    ggplot(aes(x =  Group, xend = leaf_x, y = trunk_height, yend = leaf_y, 
+              color = outcome))+
+    geom_curve(aes(x = Group, xend = Group, y = 0, yend = trunk_height),
+              curvature = 0.2, size = 1.5,
+              color = '#5F5D36', lineend = "round")+
+    geom_curve(data = subset(df_tree,leaf_pos == "left"),
+              curvature = 0.6, lineend = "round", size = 4) +
+    geom_curve(data = subset(df_tree,leaf_pos == "right"), 
+              curvature = -0.6, lineend = "round", size = 4) +
+    scale_x_continuous(breaks = c(trunk_pos1, 2*trunk_pos1, 3*trunk_pos1, 4*trunk_pos1),
+                      labels = c("Control", "Group 1", "Group 2", "Group 3"))+
+    scale_color_brewer(type = "qual", palette = "Dark2",
+                      breaks=c("Letter Names","Letter Sounds",
+                                  "Invented words", "Familiar words", 
+                                  "Oral reading"))+
+    ylim(0, 20) +
+    theme_void() +
+    theme(legend.position = "top",
+          legend.title = element_blank()) +
+    mytheme
+
+gg_palmtree
+
+```
+
+## ESS and the SDGs
+
