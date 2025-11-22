@@ -73,7 +73,7 @@ for (i in sample(1:n_colab)){
   df$x1[i] <- sample(1:n_colab)
   df$y1[i] <- sample(1:n_colab)
   
-  # If pronoum == s then go right and up otherwise the opposite
+  # If pronoun equals to s then go right and up otherwise the opposite
   direction <- if_else(df$pronoum[i] == "s", 1, -1)
   height <- sample(c(0.1, 0.7, 1), 1)
 
@@ -88,9 +88,10 @@ plot_compo <-
     theme_void() +
     theme(legend.position = "none")
 
-ggsave(plot_compo, filename = "./_img/composicao.png")
+ggsave(plot_compo, filename = "./_img/composicao.png", width = 8, height = 4)
 
-plot_compo
+plot_compo + 
+  theme(panel.border = element_rect(colour = "grey30", fill=NA, linewidth=1)) 
 
 ```
 
