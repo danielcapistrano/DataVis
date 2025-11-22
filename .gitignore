@@ -14,3 +14,7 @@ Thumbs.db
 # Temporary or Old files #
 ####################
 _archive/
+
+# Data subdirectory #
+####################
+data/
