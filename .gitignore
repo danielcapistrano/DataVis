@@ -18,3 +18,5 @@ _archive/
 # Data subdirectory #
 ####################
 data/
+/.quarto/
+**/*.quarto_ipynb

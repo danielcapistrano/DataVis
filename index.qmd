@@ -19,16 +19,18 @@ Almost all my publications (reports, chapters, journal articles) result from col
 
 ### Composição
 
-1) First, we import the dataset that contains basically the surnames of my colleagues, their country of origin and preferred pronoun, as well as the year we started working together. 
+1) First, we import the dataset that contains basically the surnames, their country of origin and pronoun, as well as the year we started working together. 
 
-2) Using the package [`imgpalr`](https://leonawicz.github.io/imgpalr/), we create an object with the HEX code for colours that are present in random points of Lygia Clark's painting "[Composição (1953)](https://portal.lygiaclark.org.br/en/artwork/55666/composition)".
+2) Using `colorRampPalette()`, we extend the colors from basic colours present in high contrast points of Lygia Clark's painting "[Composição (1953)](https://portal.lygiaclark.org.br/en/artwork/55666/composition)".
 
-3) Finally, we generate one rectangle for each colleague with the side proportional to the time since we met. Colours represent the combination of pronoun and country of origin. 
+3) Finally, we generate one rectangle for each colleague with the side proportional to the time since we met. Colours represent the combination of pronoun and country of origin, and transparency is proportional to size.
 
 ```{r}
+#| fig-asp: 1.5
+
+
 library(tidyverse)
 library(ggpubr)
-library(imgpalr)
 
 # 1) Importing the dataset  and transforming variables ########################
 
@@ -47,26 +49,30 @@ df$group <- paste0(df$country, df$pronoum)
 # Number of co-laborators
 n_colab <- nrow(df)
 
-
 # 2) Creating colour palette #####################################
 
-# Seed for palette generation and coordinates
-seed = 7
-set.seed(seed)
+lc_palette <- c(
+  "#007640",
+  "#003768",
+  "#facb37",
+  "#ad3010",
+  "#88a69c",
+  "#cd4e1b",
+  "#407070"
+)
 
-# URL of the image of Lygia Clark's Composicao (1953)
+lc_canvas <- "#ece8e0"
 
-img_url <- "https://portal.lygiaclark.org.br/public/upload/screen/2021-09-07/6b1143a6023bc122578da3423f4149cc[2100x2995].jpg"
-
-# Generating one color for each row in the dataset
-compo <- image_pal(img_url, n = nrow(df), type = "qual", seed = seed)
+# Generating one color for each group in the dataset
+compo <- colorRampPalette(lc_palette)(length(unique(df$group)))
 
 
 # 3) Generating the plot #####################################
 
 # Adding empty columns for coordinates
-df <- cbind(df, x1 = NA, x2 = NA, y1 = NA, y2 = NA)
+df <- df |> mutate(x1 = NA, x2 = NA, y1 = NA, y2 = NA)
 
+set.seed(7)
 # Loop to generate random coordinates that overlap slightly
 for (i in sample(1:n_colab)){
   # Defining the starting point randomly
@@ -88,17 +94,20 @@ plot_compo <-
     theme_void() +
     theme(legend.position = "none")
 
-ggsave(plot_compo, filename = "./_img/composicao.png", width = 8, height = 4)
+ggsave(plot_compo, filename = "./img/composicao.png", width = 8, height = 4)
 
 plot_compo + 
-  theme(panel.border = element_rect(colour = "grey30", fill=NA, linewidth=1)) 
+  theme(
+    panel.border = element_rect(colour = "grey40", fill=NA, linewidth=2),
+    plot.background = element_rect(fill = lc_canvas)
+  )
 
 ```
 
 
 ::: {.aside}
 
-![Composicao (1953) - Lygia Clark (Source: [Associação Cultural Lygia Clark](https://portal.lygiaclark.org.br/))](`r img_url`){width=400}
+![Composicao (1953) - Lygia Clark (Source: [Associação Cultural Lygia Clark](https://portal.lygiaclark.org.br/))](img/lygiaclark_compo.jpg){width=400}
 
 :::
 
@@ -121,7 +130,7 @@ plot <-
   theme_void() +
   xlim(1985, this_year) +
   theme(legend.position = "none",
-        plot.background = element_rect(fill = "#F5F5DD", 
+        plot.background = element_rect(fill = lc_canvas, 
                           colour = "white", linewidth = 5),
         plot.margin = margin(20, 2, 1, 2)) 
 
@@ -133,7 +142,7 @@ plot_time <-
     nrow = 1
   )
 
-ggsave(plot_time, filename = "./_img/timeline.png")
+ggsave(plot_time, filename = "./img/timeline.png")
 
 plot_time
 
@@ -194,7 +203,7 @@ uis_map <-
                     name = "SDG Region") +
     coord_equal() 
 
-ggsave(uis_map, filename = "./_img/uis_map.png", dpi = 320, width = 6, height = 5, bg = "transparent")
+ggsave(uis_map, filename = "./img/uis_map.png", dpi = 320, width = 6, height = 5, bg = "transparent")
 
 uis_map
 
@@ -202,7 +211,7 @@ uis_map
 
 
 :::{.aside}
-![Figure 16 of the SDG4 Data Digest 2019. Source: [UIS](https://uis.unesco.org/sites/default/files/documents/sdg4-data-digest-2019-en_0.pdf)](./_img/uis_publication.png)
+![Figure 16 of the SDG4 Data Digest 2019. Source: [UIS](https://unesdoc.unesco.org/ark:/48223/pf0000372591.locale=en)](./img/uis_publication.png)
 :::
 
 ## Palm trees

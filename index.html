@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.9.28">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,6 +10,9 @@
 
 <title>DataVis</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -62,15 +65,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="index_files/libs/clipboard/clipboard.min.js"></script>
 <script src="index_files/libs/quarto-html/quarto.js" type="module"></script>
 <script src="index_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="index_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="index_files/libs/quarto-html/popper.min.js"></script>
 <script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="index_files/libs/quarto-html/anchor.min.js"></script>
 <link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-49e51e44f424ea8c7044b429bdbbbfe2.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="index_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="index_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="index_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="index_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="index_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -131,79 +133,85 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="composição" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="composição">Composição</h3>
 <ol type="1">
-<li><p>First, we import the dataset that contains basically the surnames of my colleagues, their country of origin and preferred pronoun, as well as the year we started working together.</p></li>
-<li><p>Using the package <a href="https://leonawicz.github.io/imgpalr/"><code>imgpalr</code></a>, we create an object with the HEX code for colours that are present in random points of Lygia Clark’s painting “<a href="https://portal.lygiaclark.org.br/en/artwork/55666/composition">Composição (1953)</a>”.</p></li>
-<li><p>Finally, we generate one rectangle for each colleague with the side proportional to the time since we met. Colours represent the combination of pronoun and country of origin.</p></li>
+<li><p>First, we import the dataset that contains basically the surnames, their country of origin and pronoun, as well as the year we started working together.</p></li>
+<li><p>Using <code>colorRampPalette()</code>, we extend the colors from basic colours present in high contrast points of Lygia Clark’s painting “<a href="https://portal.lygiaclark.org.br/en/artwork/55666/composition">Composição (1953)</a>”.</p></li>
+<li><p>Finally, we generate one rectangle for each colleague with the side proportional to the time since we met. Colours represent the combination of pronoun and country of origin, and transparency is proportional to size.</p></li>
 </ol>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(imgpalr)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Importing the dataset  and transforming variables ########################</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Reading the dataset</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"./data/colleagues.csv"</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Getting current year</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>this_year <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">format</span>(<span class="fu">Sys.Date</span>(), <span class="st">"%Y"</span>))</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Size of the block is equal to the number of years since year met</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>size <span class="ot">&lt;-</span> (this_year <span class="sc">-</span> df<span class="sc">$</span>year_met)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating group combining country and pronoum</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">paste0</span>(df<span class="sc">$</span>country, df<span class="sc">$</span>pronoum)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of co-laborators</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>n_colab <span class="ot">&lt;-</span> <span class="fu">nrow</span>(df)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Importing the dataset  and transforming variables ########################</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Reading the dataset</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"./data/colleagues.csv"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Getting current year</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>this_year <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">format</span>(<span class="fu">Sys.Date</span>(), <span class="st">"%Y"</span>))</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Size of the block is equal to the number of years since year met</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>size <span class="ot">&lt;-</span> (this_year <span class="sc">-</span> df<span class="sc">$</span>year_met)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating group combining country and pronoum</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">paste0</span>(df<span class="sc">$</span>country, df<span class="sc">$</span>pronoum)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of co-laborators</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>n_colab <span class="ot">&lt;-</span> <span class="fu">nrow</span>(df)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Creating colour palette #####################################</span></span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Creating colour palette #####################################</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Seed for palette generation and coordinates</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>seed <span class="ot">=</span> <span class="dv">7</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(seed)</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># URL of the image of Lygia Clark's Composicao (1953)</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>img_url <span class="ot">&lt;-</span> <span class="st">"https://portal.lygiaclark.org.br/public/upload/screen/2021-09-07/6b1143a6023bc122578da3423f4149cc[2100x2995].jpg"</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>lc_palette <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"#007640"</span>,</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"#003768"</span>,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">"#facb37"</span>,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"#ad3010"</span>,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">"#88a69c"</span>,</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"#cd4e1b"</span>,</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"#407070"</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Generating one color for each row in the dataset</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>compo <span class="ot">&lt;-</span> <span class="fu">image_pal</span>(img_url, <span class="at">n =</span> <span class="fu">nrow</span>(df), <span class="at">type =</span> <span class="st">"qual"</span>, <span class="at">seed =</span> seed)</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Generating the plot #####################################</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>lc_canvas <span class="ot">&lt;-</span> <span class="st">"#ece8e0"</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Generating one color for each group in the dataset</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>compo <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(lc_palette)(<span class="fu">length</span>(<span class="fu">unique</span>(df<span class="sc">$</span>group)))</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding empty columns for coordinates</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">cbind</span>(df, <span class="at">x1 =</span> <span class="cn">NA</span>, <span class="at">x2 =</span> <span class="cn">NA</span>, <span class="at">y1 =</span> <span class="cn">NA</span>, <span class="at">y2 =</span> <span class="cn">NA</span>)</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop to generate random coordinates that overlap slightly</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n_colab)){</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Defining the starting point randomly</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>x1[i] <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n_colab)</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>y1[i] <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n_colab)</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="co"># If pronoun equals to s then go right and up otherwise the opposite</span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  direction <span class="ot">&lt;-</span> <span class="fu">if_else</span>(df<span class="sc">$</span>pronoum[i] <span class="sc">==</span> <span class="st">"s"</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  height <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.7</span>, <span class="dv">1</span>), <span class="dv">1</span>)</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>x2[i] <span class="ot">&lt;-</span> df<span class="sc">$</span>x1[i] <span class="sc">+</span> direction <span class="sc">*</span> df<span class="sc">$</span>size[i]</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>y2[i] <span class="ot">&lt;-</span> df<span class="sc">$</span>y1[i] <span class="sc">+</span> direction <span class="sc">*</span> df<span class="sc">$</span>size[i] <span class="sc">*</span> height</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>plot_compo <span class="ot">&lt;-</span> </span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(df,<span class="fu">aes</span>(<span class="at">xmin =</span> x1, <span class="at">xmax =</span> x2, <span class="at">ymin =</span> y1, <span class="at">ymax =</span> y2)) <span class="sc">+</span></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_rect</span>(<span class="fu">aes</span>(<span class="at">fill =</span> group, <span class="at">alpha =</span> <span class="dv">1</span> <span class="sc">-</span> size<span class="sc">/</span><span class="fu">max</span>(size))) <span class="sc">+</span></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> compo) <span class="sc">+</span></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>() <span class="sc">+</span></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(plot_compo, <span class="at">filename =</span> <span class="st">"./_img/composicao.png"</span>, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">4</span>)</span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>plot_compo <span class="sc">+</span> </span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">colour =</span> <span class="st">"grey30"</span>, <span class="at">fill=</span><span class="cn">NA</span>, <span class="at">linewidth=</span><span class="dv">1</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Generating the plot #####################################</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding empty columns for coordinates</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">x1 =</span> <span class="cn">NA</span>, <span class="at">x2 =</span> <span class="cn">NA</span>, <span class="at">y1 =</span> <span class="cn">NA</span>, <span class="at">y2 =</span> <span class="cn">NA</span>)</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7</span>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop to generate random coordinates that overlap slightly</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n_colab)){</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Defining the starting point randomly</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>x1[i] <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n_colab)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>y1[i] <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n_colab)</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  <span class="co"># If pronoun equals to s then go right and up otherwise the opposite</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  direction <span class="ot">&lt;-</span> <span class="fu">if_else</span>(df<span class="sc">$</span>pronoum[i] <span class="sc">==</span> <span class="st">"s"</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  height <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.7</span>, <span class="dv">1</span>), <span class="dv">1</span>)</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>x2[i] <span class="ot">&lt;-</span> df<span class="sc">$</span>x1[i] <span class="sc">+</span> direction <span class="sc">*</span> df<span class="sc">$</span>size[i]</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>y2[i] <span class="ot">&lt;-</span> df<span class="sc">$</span>y1[i] <span class="sc">+</span> direction <span class="sc">*</span> df<span class="sc">$</span>size[i] <span class="sc">*</span> height</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>plot_compo <span class="ot">&lt;-</span> </span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(df,<span class="fu">aes</span>(<span class="at">xmin =</span> x1, <span class="at">xmax =</span> x2, <span class="at">ymin =</span> y1, <span class="at">ymax =</span> y2)) <span class="sc">+</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_rect</span>(<span class="fu">aes</span>(<span class="at">fill =</span> group, <span class="at">alpha =</span> <span class="dv">1</span> <span class="sc">-</span> size<span class="sc">/</span><span class="fu">max</span>(size))) <span class="sc">+</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> compo) <span class="sc">+</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(plot_compo, <span class="at">filename =</span> <span class="st">"./img/composicao.png"</span>, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">4</span>)</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>plot_compo <span class="sc">+</span> </span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">colour =</span> <span class="st">"grey40"</span>, <span class="at">fill=</span><span class="cn">NA</span>, <span class="at">linewidth=</span><span class="dv">2</span>),</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> lc_canvas)</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -217,7 +225,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="no-row-height column-margin column-container"><div class="margin-aside">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://portal.lygiaclark.org.br/public/upload/screen/2021-09-07/6b1143a6023bc122578da3423f4149cc%5B2100x2995%5D.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Composicao (1953) - Lygia Clark (Source: Associação Cultural Lygia Clark)"><img src="https://portal.lygiaclark.org.br/public/upload/screen/2021-09-07/6b1143a6023bc122578da3423f4149cc%5B2100x2995%5D.jpg" class="img-fluid figure-img" width="400" alt="Composicao (1953) - Lygia Clark (Source: Associação Cultural Lygia Clark)"></a></p>
+<p><a href="img/lygiaclark_compo.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Composicao (1953) - Lygia Clark (Source: Associação Cultural Lygia Clark)"><img src="img/lygiaclark_compo.jpg" class="img-fluid figure-img" width="400" alt="Composicao (1953) - Lygia Clark (Source: Associação Cultural Lygia Clark)"></a></p>
 <figcaption>Composicao (1953) - Lygia Clark (Source: <a href="https://portal.lygiaclark.org.br/">Associação Cultural Lygia Clark</a>)</figcaption>
 </figure>
 </div>
@@ -240,7 +248,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">1985</span>, this_year) <span class="sc">+</span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#F5F5DD"</span>, </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> lc_canvas, </span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                          <span class="at">colour =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="dv">5</span>),</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="dv">20</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>)) </span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
@@ -252,7 +260,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">nrow =</span> <span class="dv">1</span></span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(plot_time, <span class="at">filename =</span> <span class="st">"./_img/timeline.png"</span>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(plot_time, <span class="at">filename =</span> <span class="st">"./img/timeline.png"</span>)</span>
 <span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>plot_time</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -316,7 +324,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name =</span> <span class="st">"SDG Region"</span>) <span class="sc">+</span></span>
 <span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_equal</span>() </span>
 <span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(uis_map, <span class="at">filename =</span> <span class="st">"./_img/uis_map.png"</span>, <span class="at">dpi =</span> <span class="dv">320</span>, <span class="at">width =</span> <span class="dv">6</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">bg =</span> <span class="st">"transparent"</span>)</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(uis_map, <span class="at">filename =</span> <span class="st">"./img/uis_map.png"</span>, <span class="at">dpi =</span> <span class="dv">320</span>, <span class="at">width =</span> <span class="dv">6</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">bg =</span> <span class="st">"transparent"</span>)</span>
 <span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>uis_map</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -332,8 +340,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="no-row-height column-margin column-container"><div class="margin-aside">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="./_img/uis_publication.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure 16 of the SDG4 Data Digest 2019. Source: UIS"><img src="./_img/uis_publication.png" class="img-fluid figure-img" alt="Figure 16 of the SDG4 Data Digest 2019. Source: UIS"></a></p>
-<figcaption>Figure 16 of the SDG4 Data Digest 2019. Source: <a href="https://uis.unesco.org/sites/default/files/documents/sdg4-data-digest-2019-en_0.pdf">UIS</a></figcaption>
+<p><a href="./img/uis_publication.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure 16 of the SDG4 Data Digest 2019. Source: UIS"><img src="./img/uis_publication.png" class="img-fluid figure-img" alt="Figure 16 of the SDG4 Data Digest 2019. Source: UIS"></a></p>
+<figcaption>Figure 16 of the SDG4 Data Digest 2019. Source: <a href="https://unesdoc.unesco.org/ark:/48223/pf0000372591.locale=en">UIS</a></figcaption>
 </figure>
 </div>
 </div></div></section>
